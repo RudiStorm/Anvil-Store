@@ -1,0 +1,15 @@
+.git
+.github
+.vs
+.debug-generated
+.fragment-nav-test
+.release-acceptance-*
+**/bin
+**/obj
+**/.vs
+**/anvil-store.db
+**/store-storage
+**/sample-storage
+**/TestResults
+*.user
+*.suo

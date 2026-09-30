@@ -1,0 +1,7 @@
+@page "/admin/mail"
+@attribute [Authorize(Roles = "Administrator")]
+@inject RequestContext Request
+
+<PageTitle>Mailcatcher | Anvil Store</PageTitle>
+<section class="page-hero section-wrap"><div><p class="eyebrow">Admin / development mail</p><h1>Inspect every<br /><em>message.</em></h1></div><p class="hero-copy">Mailcatcher captures SMTP messages locally so you can test registration, moderation, and account emails without sending real mail.</p></section>
+<section class="section-wrap mail-panel"><div class="panel"><p class="eyebrow">Send a test</p><h2>Verify the SMTP connection.</h2>@if(Request.Request.Query.ContainsKey("sent")){<div class="form-success" role="status">Message sent. Open Mailcatcher at <a href="http://localhost:1080" target="_blank" rel="noreferrer">localhost:1080</a>.</div>}<form class="auth-form" method="post" action="/api/admin/mail/test"><AntiforgeryToken /><label>Recipient<input name="To" type="email" value="you@example.test" required /></label><button class="button button-primary" type="submit">Send test email →</button></form></div><aside class="panel"><p class="eyebrow">Connection</p><h2>Local defaults</h2><dl class="mail-details"><dt>SMTP host</dt><dd>localhost</dd><dt>SMTP port</dt><dd>1025</dd><dt>Web inbox</dt><dd>http://localhost:1080</dd><dt>TLS</dt><dd>Disabled for local capture</dd></dl></aside></section>

@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.idea/
+.anvil/
+*.db
+*.db-shm
+*.db-wal
+store-storage/
+data/

@@ -1,0 +1,5 @@
+@page "/creators/{slug}"
+@inject StoreDbContext Db
+
+@if(profile is null){<section class="section-wrap empty-state"><h1>Creator not found</h1></section>}else{<PageTitle>@profile.DisplayName | Anvil Store</PageTitle><section class="page-hero section-wrap"><div><p class="eyebrow">Creator profile</p><h1>@profile.DisplayName</h1></div><p class="hero-copy">@profile.Bio</p></section><section class="section-wrap catalog"><p class="eyebrow">Published work</p><div class="listing-grid">@foreach(var item in profile.Listings.Where(x => x.Status == ListingStatus.Published)){<a class="listing-card" href="/@(item.PackageType == PackageType.Template ? "templates" : "providers")/@item.Slug"><span class="card-index">@item.PackageType</span><h2>@item.Name</h2><p>@item.Summary</p></a>}</div></section>}
+@code { [Parameter] public string slug { get; set; } = string.Empty; private Anvil.Store.CreatorProfile? profile; protected override async Task OnInitializedAsync() => profile = await Db.CreatorProfiles.AsNoTracking().Include(x => x.Listings).SingleOrDefaultAsync(x => x.Slug == slug); }

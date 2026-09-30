@@ -1,0 +1,13 @@
+{
+  "id": "anvil-team.mailcatcher",
+  "name": "Anvil Mailcatcher Provider",
+  "type": "Provider",
+  "version": "1.0.0",
+  "license": "MIT",
+  "supportedAnvilVersions": ["0.1"],
+  "supportedDotnetVersions": ["10.0"],
+  "dependencies": [],
+  "repositoryUrl": "https://github.com/RudiStorm/Anvil",
+  "installation": "Register the provider with builder.Services.AddAnvilStoreMailcatcher(builder.Configuration).",
+  "customization": "Configure the Mailcatcher host, SMTP port, credentials, and TLS settings for your development environment."
+}

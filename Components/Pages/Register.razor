@@ -1,0 +1,22 @@
+@page "/account/register"
+@attribute [AllowAnonymous]
+@inject RequestContext Request
+
+<PageTitle>Create account | Anvil Store</PageTitle>
+<section class="auth-shell section-wrap">
+    <p class="eyebrow">Get started</p>
+    <h1>Create your<br /><em>store account.</em></h1>
+    <p class="hero-copy">Download source, save your library, and review the packages you have actually tried.</p>
+    @if (Request.Request.Query.ContainsKey("error"))
+    {
+        <div class="form-alert" role="alert">Please review your details and try again.</div>
+    }
+    <form method="post" action="/account/register/submit" class="auth-form">
+        <AntiforgeryToken />
+        <label>Username<input name="UserName" autocomplete="username" required minlength="3" /></label>
+        <label>Email<input name="Email" type="email" autocomplete="email" required /></label>
+        <label>Password<input name="Password" type="password" autocomplete="new-password" required minlength="8" /></label>
+        <button class="button button-primary" type="submit">Create account <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="auth-switch">Already have an account? <a href="/account/login">Sign in</a></p>
+</section>

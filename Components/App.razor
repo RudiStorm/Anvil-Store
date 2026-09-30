@@ -1,0 +1,27 @@
+@using Anvil.Razor
+@using Anvil.Razor.Components
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="store.css" />
+    <HeadOutlet />
+</head>
+<body hx-boost="true">
+    <AnvilRuntime />
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.StoreLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(Layout.StoreLayout)"><h1>Package not found</h1><p>That route does not exist.</p></LayoutView>
+        </NotFound>
+    </Router>
+    <script src="_framework/blazor.web.js"></script>
+    <script src="store.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+@page "/templates"
+@page "/providers"
+@inject StoreCatalogReader CatalogReader
+@inject RequestContext Request
+
+<PageTitle>@(IsProvider ? "Providers" : "Templates") | Anvil Store</PageTitle>
+<section class="page-hero section-wrap"><div><p class="eyebrow">@(IsProvider ? "Provider collection" : "Template collection")</p><h1>Build from<br /><em>the right shape.</em></h1></div><p class="hero-copy">Open-source packages with readable code, honest compatibility notes, and room for your own decisions.</p></section>
+<section class="catalog section-wrap"><div class="catalog-toolbar"><span>@items.Count package@(items.Count == 1 ? "" : "s")</span><a class="text-link" href="/search">Search the store →</a></div><div class="listing-grid">@foreach (var item in items){<a class="listing-card" href="/@(IsProvider ? "providers" : "templates")/@item.Slug"><div class="listing-icon">@(IsProvider ? "↗" : "✦")</div><span class="card-index">@(item.PackageType.ToString().ToUpperInvariant()) · MIT</span><h2>@item.Name</h2><p>@item.Summary</p><div class="listing-meta"><span>@item.SupportedAnvilVersions</span><span>View →</span></div></a>}</div></section>
+
+@code {
+    private IReadOnlyList<StoreCatalogItem> items = [];
+    private bool IsProvider => Request.Request.Path.StartsWithSegments("/providers");
+    protected override async Task OnInitializedAsync() => items = await CatalogReader.GetPublishedAsync(IsProvider ? PackageType.Provider : PackageType.Template);
+}

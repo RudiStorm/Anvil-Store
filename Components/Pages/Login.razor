@@ -1,0 +1,26 @@
+@page "/account/login"
+@attribute [AllowAnonymous]
+@inject RequestContext Request
+
+<PageTitle>Sign in | Anvil Store</PageTitle>
+<section class="auth-shell section-wrap">
+    <p class="eyebrow">Welcome back</p>
+    <h1>Sign in to<br /><em>your store account.</em></h1>
+    <p class="hero-copy">Track downloads, save packages, and share useful feedback with the Anvil community.</p>
+    @if (Request.Request.Query.ContainsKey("error"))
+    {
+        <div class="form-alert" role="alert">Those details could not be verified. Please try again.</div>
+    }
+    @if (Request.Request.Query.ContainsKey("registered"))
+    {
+        <div class="form-success" role="status">Your account was created. Sign in to continue.</div>
+    }
+    <form method="post" action="/account/login/submit" class="auth-form">
+        <AntiforgeryToken />
+        <label>Username or email<input name="UserName" autocomplete="username" required /></label>
+        <label>Password<input name="Password" type="password" autocomplete="current-password" required /></label>
+        <label class="checkbox-label"><input name="RememberMe" type="checkbox" value="true" /> Remember me</label>
+        <button class="button button-primary" type="submit">Sign in <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="auth-switch">New here? <a href="/account/register">Create an account</a></p>
+</section>

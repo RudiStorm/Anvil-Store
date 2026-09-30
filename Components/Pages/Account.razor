@@ -1,0 +1,14 @@
+@page "/account"
+@inject RequestContext Request
+
+<PageTitle>Account | Anvil Store</PageTitle>
+@if (Request.HttpContext.User.Identity?.IsAuthenticated == true)
+{
+    <section class="page-hero section-wrap"><div><p class="eyebrow">Your account</p><h1>Keep your<br /><em>library close.</em></h1></div><p class="hero-copy">You are signed in as <strong>@Request.HttpContext.User.Identity.Name</strong>. Track downloads, save packages, and leave reviews for code you have actually tried.</p></section>
+    <section class="section-wrap account-grid"><div class="feature-card feature-card-accent"><span class="card-index">DOWNLOADS</span><h2>Your source library.</h2><p>Download history and checksums stay connected to your account.</p></div><div class="feature-card"><span class="card-index">REVIEWS</span><h2>Feedback with context.</h2><p>Only authenticated users who downloaded a listing can review it.</p></div></section>
+}
+else
+{
+    <section class="page-hero section-wrap"><div><p class="eyebrow">Your account</p><h1>Keep your<br /><em>library close.</em></h1></div><p class="hero-copy">Sign in to track downloads, save packages, and leave reviews for code you have actually tried.</p></section>
+    <section class="section-wrap account-grid"><div class="feature-card feature-card-accent"><span class="card-index">DOWNLOADS</span><h2>Your source library.</h2><p>Download history and checksums will stay connected to your account.</p><a class="text-link" href="/account/login">Sign in to continue →</a></div><div class="feature-card"><span class="card-index">NEW HERE?</span><h2>Create an account.</h2><p>Registration is open for the first Store release.</p><a class="text-link" href="/account/register">Register →</a></div></section>
+}

@@ -1,0 +1,22 @@
+@page "/dashboard"
+@attribute [Authorize]
+@inject StoreDbContext Db
+@inject RequestContext Request
+
+<PageTitle>Dashboard | Anvil Store</PageTitle>
+<section class="page-hero section-wrap"><div><p class="eyebrow">Your Store workspace</p><h1>Welcome to<br /><em>the collection.</em></h1></div><p class="hero-copy">You are signed in as <strong>@Request.HttpContext.User.Identity?.Name</strong>. Browse source, manage your creator work, and keep your downloads close.</p></section>
+<section class="section-wrap dashboard-cards"><div class="metric-card"><span class="metric-label">Published packages</span><strong>@publishedCount</strong><small>Templates and providers</small></div><div class="metric-card"><span class="metric-label">Templates</span><strong>@templateCount</strong><small>Editable starters</small></div><div class="metric-card"><span class="metric-label">Providers</span><strong>@providerCount</strong><small>Reusable integrations</small></div></section>
+<section class="section-wrap dashboard-grid-store"><a class="feature-card feature-card-accent" href="/templates"><span class="card-index">EXPLORE</span><h2>Find a starting point.</h2><p>Browse complete templates with source, documentation, license, and compatibility information.</p><span class="card-link">Explore templates →</span></a><a class="feature-card" href="/creator"><span class="card-index">CREATE</span><h2>Share your work.</h2><p>Submit an open-source provider or template for scanning and manual review.</p><span class="card-link">Open creator studio →</span></a><a class="feature-card" href="/account"><span class="card-index">ACCOUNT</span><h2>Keep your library close.</h2><p>Review your account, download history, and community activity.</p><span class="card-link">View account →</span></a></section>
+
+@code {
+    private int publishedCount;
+    private int templateCount;
+    private int providerCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        publishedCount = await Db.Listings.CountAsync(x => x.Status == ListingStatus.Published);
+        templateCount = await Db.Listings.CountAsync(x => x.Status == ListingStatus.Published && x.PackageType == PackageType.Template);
+        providerCount = await Db.Listings.CountAsync(x => x.Status == ListingStatus.Published && x.PackageType == PackageType.Provider);
+    }
+}

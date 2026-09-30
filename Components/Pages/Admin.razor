@@ -1,0 +1,34 @@
+@page "/admin"
+@page "/admin/submissions"
+@attribute [Authorize(Roles = "Moderator,Administrator")]
+@inject StoreDbContext Db
+@inject RequestContext Request
+
+<PageTitle>Admin dashboard | Anvil Store</PageTitle>
+<section class="page-hero section-wrap"><div><p class="eyebrow">Operations / administration</p><h1>Run the<br /><em>collection.</em></h1></div><p class="hero-copy">Review releases, manage the catalog, and keep the people who build Anvil packages moving.</p></section>
+<section class="section-wrap admin-grid"><div class="metric-card"><span class="metric-label">Awaiting review</span><strong>@pendingCount</strong><small>clean uploads</small></div><div class="metric-card"><span class="metric-label">Published listings</span><strong>@publishedCount</strong><small>public packages</small></div><div class="metric-card"><span class="metric-label">Registered users</span><strong>@userCount</strong><small>accounts in the Store</small></div></section>
+<section class="section-wrap table-section"><div class="panel-heading"><div><p class="eyebrow">Review queue</p><h2>Submissions requiring a decision</h2></div></div><div class="table-wrap"><table><thead><tr><th>Package</th><th>Version</th><th>Scan</th><th>Submitted</th><th></th></tr></thead><tbody>@foreach(var release in releases){<tr><td><strong>@release.Listing?.Name</strong><small>@release.Listing?.PackageType</small></td><td>v@release.Version</td><td><span class="status-pill status-clean">@release.Artifact?.ScanStatus</span></td><td>@release.CreatedAt.ToString("yyyy-MM-dd")</td><td><form method="post" action="/api/admin/releases/@release.Id/approve"><AntiforgeryToken /><button class="button button-primary button-small" type="submit">Approve</button></form></td></tr>}</tbody></table></div></section>
+<section class="section-wrap table-section"><div class="panel-heading"><div><p class="eyebrow">Catalog</p><h2>Templates and providers</h2></div></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Status</th><th>Command</th></tr></thead><tbody>@foreach(var listing in listings){<tr><td><strong>@listing.Name</strong><small>@listing.Slug</small></td><td>@listing.PackageType</td><td><code>@listing.Identifier</code></td><td>@listing.Status</td><td><a class="text-link" href="/@(listing.PackageType == PackageType.Template ? "templates" : "providers")/@listing.Slug">View →</a></td></tr>}</tbody></table></div></section>
+@if (Request.HttpContext.User.IsInRole("Administrator"))
+{
+    <section class="section-wrap table-section"><div class="panel-heading"><div><p class="eyebrow">People</p><h2>Manage users</h2></div></div><div class="table-wrap"><table><thead><tr><th>Account</th><th>Email</th><th>Creator</th><th>Role</th><th></th></tr></thead><tbody>@foreach(var user in users){<tr><td><strong>@user.DisplayName</strong><small>@user.UserName</small></td><td>@user.Email</td><td>@(user.IsCreator ? "Yes" : "No")</td><td><form class="role-form" method="post" action="/api/admin/users/@user.Id/role"><AntiforgeryToken /><select name="Role"><option>User</option><option selected="@(user.IsCreator ? "selected" : null)">Creator</option><option>Moderator</option><option>Administrator</option></select><button class="button button-secondary button-small" type="submit">Save</button></form></td><td></td></tr>}</tbody></table></div></section>
+}
+
+@code {
+    private List<ListingVersion> releases = [];
+    private List<StoreListing> listings = [];
+    private List<StoreUser> users = [];
+    private int pendingCount;
+    private int publishedCount;
+    private int userCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        releases = await Db.ListingVersions.AsNoTracking().Include(x => x.Listing).Include(x => x.Artifact).Where(x => x.Status == ReleaseStatus.AwaitingReview).OrderBy(x => x.Id).ToListAsync();
+        listings = await Db.Listings.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+        users = await Db.Users.AsNoTracking().OrderBy(x => x.UserName).ToListAsync();
+        pendingCount = releases.Count;
+        publishedCount = listings.Count(x => x.Status == ListingStatus.Published);
+        userCount = users.Count;
+    }
+}
