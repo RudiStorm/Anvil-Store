@@ -5,7 +5,7 @@
     <header class="site-header">
         <a class="brand" href="/"><span class="brand-mark">A</span><span>anvil<span class="brand-dot">.</span>store</span></a>
         <nav aria-label="Primary navigation">
-            <a href="/templates">Templates</a><a href="/providers">Providers</a><a href="/creators/anvil-team">Creators</a><a href="/creator">Create</a>
+            <a href="/templates">Templates</a><a href="/providers">Providers</a><a href="/about-anvil">What is Anvil?</a><a href="/creators/anvil-team">Creators</a><a href="/creator">Create</a>
         </nav>
         <div class="header-actions">@if (Request.HttpContext.User.Identity?.IsAuthenticated == true){@if (Request.HttpContext.User.IsInRole("Administrator")){<a class="button button-primary" href="/admin">Admin dashboard</a><a class="button button-outline" href="/admin/mail">Mail</a>}<a class="button button-outline" href="/account">Account</a><form method="post" action="/account/logout"><AntiforgeryToken /><button class="theme-button" type="submit">Sign out</button></form>}else{<a class="button button-outline" href="/account/login">Sign in</a>}<button id="theme-toggle" class="theme-button" type="button" aria-label="Switch color theme">Light mode</button></div>
     </header>
